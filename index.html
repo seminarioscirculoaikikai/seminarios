@@ -346,21 +346,11 @@ section {
   border-bottom: 3px solid var(--gulf-blue);
   border-left: 3px solid var(--gulf-blue);
 }
-.sensei-img-placeholder {
+.sensei-img {
   width: 100%;
-  aspect-ratio: 3/4;
-  background: linear-gradient(160deg, rgba(0,169,206,0.12) 0%, rgba(6,14,26,0.8) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-  color: rgba(255,255,255,0.25);
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  height: auto;
+  display: block;
 }
-.sensei-img-placeholder .icon { font-size: 48px; opacity: 0.3; }
 
 /* ── CUPOS / TICKETS ── */
 .tickets-section {
@@ -803,10 +793,7 @@ footer {
     </div>
     <div class="sensei-image-col">
       <div class="sensei-image-frame">
-        <div class="sensei-img-placeholder">
-          <span class="icon">🥋</span>
-          <span>Foto del sensei</span>
-        </div>
+        <img class="sensei-img" src="horii.jpg" alt="Etsuji Horii Shihan">
       </div>
     </div>
   </div>
