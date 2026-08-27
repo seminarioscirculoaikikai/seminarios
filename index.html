@@ -575,8 +575,11 @@ section {
   font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.25s;
 }
 .map-placeholder .map-icon { font-size: 40px; opacity: 0.4; }
+a.map-placeholder:hover { background: rgba(0,169,206,0.12); color: var(--white); }
 
 /* ── CTA BOTTOM ── */
 .cta-section {
@@ -932,10 +935,10 @@ footer {
         </div>
       </div>
     </div>
-    <div class="map-placeholder">
+    <a class="map-placeholder" href="https://maps.app.goo.gl/xhvs1nUQBqTzT1VC8" target="_blank" rel="noopener">
       <span class="map-icon">🗺️</span>
-      <span>Mapa · dirección a confirmar</span>
-    </div>
+      <span>Ver ubicación en Google Maps</span>
+    </a>
   </div>
 </div>
 
