@@ -534,6 +534,18 @@ nav {
   clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
 }
 .submit-btn:hover { background: #e06010; }
+.submit-btn:disabled { background: rgba(244,121,32,0.4); cursor: not-allowed; }
+.submit-error {
+  display: none;
+  background: rgba(244,121,32,0.08);
+  border: 1px solid rgba(244,121,32,0.3);
+  color: var(--white);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 14px 16px;
+  margin-top: 12px;
+}
+.submit-error.show { display: block; }
 .form-footer {
   text-align: center;
   font-size: 11px;
@@ -918,7 +930,8 @@ nav {
     </div>
   </div>
 
-  <button class="submit-btn" onclick="submitForm()">Confirmar inscripción →</button>
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Confirmar inscripción →</button>
+  <div class="submit-error" id="submitError">No pudimos enviar tu inscripción. Revisá tu conexión e intentá de nuevo, o escribinos directamente por email/WhatsApp (más abajo).</div>
   <div class="form-footer">
     La inscripción se confirma una vez acreditado el pago.<br>
     <a href="mailto:circuloaikikai@gmail.com">circuloaikikai@gmail.com</a> &nbsp;·&nbsp;
@@ -1060,7 +1073,7 @@ nav {
     return valid;
   }
 
-  function submitForm() {
+  async function submitForm() {
     if (!selectedCupo) {
       document.getElementById('cupoAlert').style.display = 'block';
       window.scrollTo({ top: document.querySelector('.cupos-wrap').offsetTop - 20, behavior: 'smooth' });
@@ -1080,13 +1093,49 @@ nav {
     if (!clausulaAccepted) { document.getElementById('err-clausula').classList.add('show'); valid = false; }
     if (!valid) return;
 
+    const val = id => document.getElementById(id).value.trim();
     const total = selectedCupo.precio + (addonSelected ? SEMINARIO_CONFIG.specialPractice.priceUsd : 0);
-    const nombre = document.getElementById('nombre').value.trim() + ' ' + document.getElementById('apellido').value.trim();
+    const nombreCompleto = val('nombre') + ' ' + val('apellido');
+
+    const payload = {
+      nombre: val('nombre'), apellido: val('apellido'), email: val('email'), telefono: val('telefono'),
+      ciudad: val('ciudad'), provincia: val('provincia'), dni: val('dni'), nacimiento: val('nacimiento'),
+      rango: document.getElementById('rango').value, anios: document.getElementById('anios').value,
+      dojo: val('dojo'), agrupacion: val('agrupacion'), instructor: val('instructor'),
+      obraSocial: val('obraSocial'), nroAfiliado: val('nroAfiliado'), medico: val('medico'),
+      emergenciaNombre: val('emergenciaNombre'), emergenciaTel: val('emergenciaTel'),
+      cupoNombre: selectedCupo.nombre, cupoPrecio: selectedCupo.precio, addon: addonSelected,
+      pago: selectedPago, total, observaciones: val('observaciones'),
+      contactEmail: SEMINARIO_CONFIG.contactEmail,
+    };
+
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBox = document.getElementById('submitError');
+    errorBox.classList.remove('show');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando…';
+
+    try {
+      const response = await fetch(SEMINARIO_CONFIG.registrationEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || 'submission failed');
+    } catch (err) {
+      errorBox.classList.add('show');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Confirmar inscripción →';
+      window.scrollTo({ top: errorBox.offsetTop - 120, behavior: 'smooth' });
+      return;
+    }
+
     document.getElementById('successDetails').innerHTML = `
-      <div class="dr"><span>Inscripto</span><strong>${nombre}</strong></div>
-      <div class="dr"><span>Email</span><strong>${document.getElementById('email').value.trim()}</strong></div>
-      <div class="dr"><span>Dojo</span><strong>${document.getElementById('dojo').value.trim()}</strong></div>
-      <div class="dr"><span>Rango</span><strong>${document.getElementById('rango').value}</strong></div>
+      <div class="dr"><span>Inscripto</span><strong>${nombreCompleto}</strong></div>
+      <div class="dr"><span>Email</span><strong>${payload.email}</strong></div>
+      <div class="dr"><span>Dojo</span><strong>${payload.dojo}</strong></div>
+      <div class="dr"><span>Rango</span><strong>${payload.rango}</strong></div>
       <div class="dr"><span>Cupo</span><strong>${selectedCupo.nombre}</strong></div>
       ${addonSelected ? '<div class="dr"><span>Práctica 20 nov</span><strong>Incluida</strong></div>' : ''}
       <div class="dr"><span>Pago</span><strong>${selectedPago}</strong></div>

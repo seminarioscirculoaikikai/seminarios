@@ -7,6 +7,11 @@ const SEMINARIO_CONFIG = {
 
   contactEmail: 'info@circuloaikikai.com',
 
+  // Google Apps Script Web App URL that receives registration submissions —
+  // logs each one to a Sheet and emails a notification. See doPost() in the
+  // Apps Script project bound to the "Inscripciones" spreadsheet.
+  registrationEndpoint: 'https://script.google.com/macros/s/AKfycby5wimo2vAWHCmvAZ62HsoDEOpjEnAF2nfHdjr-S6K0Knqbf2yrkBxwaPDJhOVdAsvd/exec',
+
   // ARS shown as an estimate next to each USD price ("≈ $X ARS"). Update this
   // to the current exchange rate — everything recalculates from this one value.
   exchangeRateArsPerUsd: 1550,
