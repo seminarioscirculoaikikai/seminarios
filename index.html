@@ -412,6 +412,13 @@ section {
   margin-bottom: 4px;
 }
 .ticket-price sup { font-size: 22px; vertical-align: super; color: var(--gulf-blue); }
+.ticket-price-ars {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+  margin-bottom: 12px;
+}
 .ticket-deadline {
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -426,6 +433,14 @@ section {
   color: rgba(255,255,255,0.6);
 }
 .ticket-slots strong { color: var(--gulf-orange); font-weight: 500; }
+.ticket-card.sold-out { opacity: 0.45; }
+.ticket-slots.sold-out {
+  color: var(--gulf-orange);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
 
 /* Miercoles add-on */
 .addon-banner {
@@ -863,39 +878,14 @@ footer {
   <div class="tickets-inner">
     <div class="section-eyebrow">Cupos disponibles</div>
     <div class="section-title">Inscripción <em>escalonada</em></div>
-    <div class="tickets-grid">
-      <div class="ticket-card">
-        <div class="ticket-badge">Super Early Bird</div>
-        <div class="ticket-price"><sup>$</sup>115.000</div>
-        <div class="ticket-deadline">hasta el 31 de julio</div>
-        <div class="ticket-slots"><strong>15 cupos</strong> disponibles</div>
-      </div>
-      <div class="ticket-card featured">
-        <div class="ticket-badge">Early Bird</div>
-        <div class="ticket-price"><sup>$</sup>130.000</div>
-        <div class="ticket-deadline">hasta el 31 de agosto</div>
-        <div class="ticket-slots"><strong>20 cupos</strong> disponibles</div>
-      </div>
-      <div class="ticket-card">
-        <div class="ticket-badge">Regular</div>
-        <div class="ticket-price"><sup>$</sup>150.000</div>
-        <div class="ticket-deadline">hasta el 31 de octubre</div>
-        <div class="ticket-slots"><strong>30 cupos</strong> disponibles</div>
-      </div>
-      <div class="ticket-card">
-        <div class="ticket-badge">Last Minute</div>
-        <div class="ticket-price"><sup>$</sup>175.000</div>
-        <div class="ticket-deadline">hasta el 21 de noviembre · en puerta</div>
-        <div class="ticket-slots"><strong>15 cupos</strong> disponibles</div>
-      </div>
-    </div>
+    <div class="tickets-grid" id="ticketsGrid"></div>
 
     <div class="addon-banner">
       <div class="addon-banner-left">
-        <strong>+ Práctica especial · Viernes 20 de noviembre</strong>
+        <strong id="addonBannerLabel"></strong>
         <p>Práctica privada con Horii Sensei · cupo reducido · exclusivo inscriptos al seminario</p>
       </div>
-      <div class="addon-banner-price">+ $45.000</div>
+      <div class="addon-banner-price" id="addonBannerPrice"></div>
     </div>
   </div>
 </div>
@@ -931,7 +921,7 @@ footer {
         <div class="lugar-detail-icon">✉️</div>
         <div>
           <span class="lugar-detail-label">Contacto</span>
-          <span class="lugar-detail-value">info@circuloaikikai.com</span>
+          <span class="lugar-detail-value" id="contactEmail"></span>
         </div>
       </div>
     </div>
@@ -947,7 +937,7 @@ footer {
   <div class="cta-inner">
     <div class="cta-text">
       <strong>Cupos limitados.<br>Inscribite ahora.</strong>
-      <p>80 lugares totales · 4 categorías de precio</p>
+      <p id="cuposSummary"></p>
     </div>
     <a href="inscripcion_seminario_aikido.html" class="cta-btn">Formulario de inscripción →</a>
   </div>
@@ -966,6 +956,41 @@ footer {
   </div>
   <div class="footer-copy">© 2026 Círculo Aikikai A.C.</div>
 </footer>
+
+<script src="config.js"></script>
+<script>
+  function formatArs(usd) {
+    return (usd * SEMINARIO_CONFIG.exchangeRateArsPerUsd).toLocaleString('es-AR');
+  }
+
+  function renderTickets() {
+    const grid = document.getElementById('ticketsGrid');
+    grid.innerHTML = SEMINARIO_CONFIG.tiers.map(tier => `
+      <div class="ticket-card${tier.featured ? ' featured' : ''}${tier.soldOut ? ' sold-out' : ''}">
+        <div class="ticket-badge">${tier.name}</div>
+        <div class="ticket-price"><sup>USD</sup>${tier.priceUsd}</div>
+        <div class="ticket-price-ars">≈ $${formatArs(tier.priceUsd)} ARS</div>
+        <div class="ticket-deadline">${tier.deadline}</div>
+        <div class="ticket-slots${tier.soldOut ? ' sold-out' : ''}">${
+          tier.soldOut ? 'Agotado' : `<strong>${tier.slots} cupos</strong> disponibles`
+        }</div>
+      </div>
+    `).join('');
+
+    const totalSlots = SEMINARIO_CONFIG.tiers.reduce((sum, t) => sum + t.slots, 0);
+    document.getElementById('cuposSummary').textContent =
+      `${totalSlots} lugares totales · ${SEMINARIO_CONFIG.tiers.length} categorías de precio`;
+  }
+
+  function renderAddon() {
+    document.getElementById('addonBannerLabel').textContent = SEMINARIO_CONFIG.specialPractice.label;
+    document.getElementById('addonBannerPrice').textContent = `+ USD ${SEMINARIO_CONFIG.specialPractice.priceUsd}`;
+  }
+
+  document.getElementById('contactEmail').textContent = SEMINARIO_CONFIG.contactEmail;
+  renderTickets();
+  renderAddon();
+</script>
 
 </body>
 </html>

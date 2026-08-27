@@ -1,0 +1,42 @@
+/*
+ * Shared settings for index.html and inscripcion_seminario_aikido.html.
+ * Both pages load this file and render their pricing/contact info from it,
+ * so editing a value here updates it everywhere.
+ */
+const SEMINARIO_CONFIG = {
+
+  contactEmail: 'info@circuloaikikai.com',
+
+  // ARS shown as an estimate next to each USD price ("≈ $X ARS"). Update this
+  // to the current exchange rate — everything recalculates from this one value.
+  exchangeRateArsPerUsd: 1550,
+
+  // Public registration tiers, in order. To close a tier once its slots are
+  // full, set soldOut: true — it stays visible but shows "Agotado" and can no
+  // longer be selected on the registration page. Do not remove a tier that
+  // already has registrations tied to it.
+  tiers: [
+    { id: 'super-early-bird', name: 'Super Early Bird', priceUsd: 70,  deadline: 'hasta el 31 de julio',           slots: 25, soldOut: false },
+    { id: 'early-bird',       name: 'Early Bird',        priceUsd: 80,  deadline: 'hasta 23 septiembre 2026',       slots: 25, soldOut: false, featured: true },
+    { id: 'regular',          name: 'Regular',           priceUsd: 90,  deadline: 'hasta 23 octubre 2026',          slots: 25, soldOut: false },
+    { id: 'last-minute',      name: 'Last Minute',       priceUsd: 110, deadline: 'hasta 21 noviembre · en puerta', slots: 25, soldOut: false },
+  ],
+
+  // Hidden tier unlocked on the registration page by entering `code`.
+  // Same soldOut behavior as the tiers above.
+  accessCode: {
+    code: 'AIKIKAI01',
+    name: 'Cupo Privado',
+    priceUsd: 60,
+    deadline: 'Solo con código de acceso',
+    slots: 25,
+    soldOut: false,
+  },
+
+  // Optional add-on practice session, offered alongside every tier.
+  specialPractice: {
+    label: '+ Práctica especial · Viernes 20 de noviembre',
+    priceUsd: 30,
+  },
+
+};

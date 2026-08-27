@@ -236,6 +236,14 @@ nav {
   color: rgba(255,255,255,0.55);
 }
 .cupo-slots strong { color: var(--gulf-orange); font-weight: 400; }
+.cupo-card.sold-out { cursor: not-allowed; opacity: 0.45; }
+.cupo-card.sold-out:hover { background: var(--darker); }
+.cupo-slots.sold-out {
+  color: var(--gulf-orange);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 
 /* Addon */
 .addon-card {
@@ -642,36 +650,7 @@ nav {
 <!-- CUPOS -->
 <div class="cupos-wrap">
   <div class="section-label">Seleccioná tu cupo</div>
-  <div class="cupos-grid">
-    <div class="cupo-card" id="cupo1card" style="display:none;" onclick="selectCupo(this, 0, 60, 'Cupo Privado')">
-      <div class="cupo-badge">Cupo Privado</div>
-      <div class="cupo-price">USD <span>60</span></div>
-      <div class="cupo-ars">≈ $84.000 ARS al TC del día</div>
-      <div class="cupo-deadline">Solo con código de acceso</div>
-      <div class="cupo-slots"><strong>25</strong> cupos disponibles</div>
-    </div>
-    <div class="cupo-card" onclick="selectCupo(this, 1, 80, 'Cupo 1')">
-      <div class="cupo-badge">Cupo 1</div>
-      <div class="cupo-price">USD <span>80</span></div>
-      <div class="cupo-ars">≈ $120.000 ARS al TC blue/MEP del día</div>
-      <div class="cupo-deadline">hasta 23 septiembre 2026</div>
-      <div class="cupo-slots"><strong>25</strong> cupos disponibles</div>
-    </div>
-    <div class="cupo-card" onclick="selectCupo(this, 2, 90, 'Cupo 2')">
-      <div class="cupo-badge">Cupo 2</div>
-      <div class="cupo-price">USD <span>90</span></div>
-      <div class="cupo-ars">≈ $135.000 ARS al TC blue/MEP del día</div>
-      <div class="cupo-deadline">hasta 23 octubre 2026</div>
-      <div class="cupo-slots"><strong>25</strong> cupos disponibles</div>
-    </div>
-    <div class="cupo-card" onclick="selectCupo(this, 3, 100, 'Cupo 3')">
-      <div class="cupo-badge">Cupo 3</div>
-      <div class="cupo-price">USD <span>110</span></div>
-      <div class="cupo-ars">≈ $150.000 ARS al TC blue/MEP del día</div>
-      <div class="cupo-deadline">hasta 21 noviembre · en puerta</div>
-      <div class="cupo-slots"><strong>25</strong> cupos disponibles</div>
-    </div>
-  </div>
+  <div class="cupos-grid" id="cuposGrid"></div>
 
   <div id="codigoAccesoWrap" style="margin-bottom:10px;">
     <div style="display:flex;gap:0;align-items:stretch;">
@@ -690,11 +669,11 @@ nav {
     <div class="addon-left">
       <div class="addon-check" id="addonCheck"></div>
       <div class="addon-info">
-        <strong>+ Práctica especial · Viernes 20 de noviembre</strong>
+        <strong id="addonLabel"></strong>
         <p>Clase especial con Horii Shihan · cupo reducido · exclusivo para inscriptos al seminario · hasta el 14 de noviembre</p>
       </div>
     </div>
-    <div class="addon-price">+ USD 30 <small>≈ $42.000 ARS</small></div>
+    <div class="addon-price" id="addonPrice"></div>
   </div>
 </div>
 
@@ -931,7 +910,7 @@ nav {
   <div class="resumen-box" id="resumenBox">
     <div class="resumen-label">Resumen de tu inscripción</div>
     <div class="resumen-line"><span>Seminario — Sáb 21 · Dom 22 Nov 2026</span><span id="res-cupo-nombre">—</span></div>
-    <div class="resumen-line" id="res-addon-line" style="display:none;"><span>Práctica especial 20 nov</span><span>USD 30</span></div>
+    <div class="resumen-line" id="res-addon-line" style="display:none;"><span>Práctica especial 20 nov</span><span id="res-addon-price">—</span></div>
     <div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;margin-top:10px;font-style:italic;">El monto en ARS es referencial al TC actual. Lo que se abona es el valor en USD.</div>
     <div class="resumen-total">
       <span class="rtlabel">Total a abonar</span>
@@ -958,21 +937,60 @@ nav {
   <p style="font-size:11px;">Recordá que la inscripción se confirma una vez acreditado el pago.</p>
 </div>
 
+<script src="config.js"></script>
 <script>
 
-  const CODIGO_PRIVADO = 'AIKIKAI01';
+  function formatArs(usd) {
+    return Math.round(usd * SEMINARIO_CONFIG.exchangeRateArsPerUsd).toLocaleString('es-AR');
+  }
+
+  function cupoCardHtml(tier, extraAttrs) {
+    const soldOutClass = tier.soldOut ? ' sold-out' : '';
+    const onclick = tier.soldOut ? '' : ` onclick="selectCupo(this, '${tier.id}', ${tier.priceUsd}, '${tier.name}')"`;
+    return `
+      <div class="cupo-card${soldOutClass}"${extraAttrs || ''}${onclick}>
+        <div class="cupo-badge">${tier.name}</div>
+        <div class="cupo-price">USD <span>${tier.priceUsd}</span></div>
+        <div class="cupo-ars">≈ $${formatArs(tier.priceUsd)} ARS al TC blue/MEP del día</div>
+        <div class="cupo-deadline">${tier.deadline}</div>
+        <div class="cupo-slots${soldOutClass}">${tier.soldOut ? 'Agotado' : `<strong>${tier.slots}</strong> cupos disponibles`}</div>
+      </div>`;
+  }
+
+  function renderCupos() {
+    const grid = document.getElementById('cuposGrid');
+    const accessTier = Object.assign({ id: 'access-code' }, SEMINARIO_CONFIG.accessCode);
+    const accessCardHtml = cupoCardHtml(accessTier, ' id="cupoAccessCode" style="display:none;"');
+    const tiersHtml = SEMINARIO_CONFIG.tiers.map(t => cupoCardHtml(t)).join('');
+    grid.innerHTML = accessCardHtml + tiersHtml;
+  }
+
+  function renderAddon() {
+    const addon = SEMINARIO_CONFIG.specialPractice;
+    document.getElementById('addonLabel').textContent = addon.label;
+    document.getElementById('addonPrice').innerHTML =
+      `+ USD ${addon.priceUsd} <small>≈ $${formatArs(addon.priceUsd)} ARS</small>`;
+  }
 
   function checkCodigo(val) {
     const msg = document.getElementById('codigoMsg');
-    const card = document.getElementById('cupo1card');
-    if (val.trim().toUpperCase() === CODIGO_PRIVADO) {
-      card.style.display = 'block';
-      msg.style.display = 'block';
-      msg.style.color = 'var(--gulf-blue)';
-      msg.textContent = '✓ Cupo especial desbloqueado';
+    const card = document.getElementById('cupoAccessCode');
+    const accessCode = SEMINARIO_CONFIG.accessCode;
+    if (val.trim().toUpperCase() === accessCode.code) {
+      if (accessCode.soldOut) {
+        card.style.display = 'none';
+        msg.style.display = 'block';
+        msg.style.color = 'var(--gulf-orange)';
+        msg.textContent = 'Cupo especial agotado';
+      } else {
+        card.style.display = 'block';
+        msg.style.display = 'block';
+        msg.style.color = 'var(--gulf-blue)';
+        msg.textContent = '✓ Cupo especial desbloqueado';
+      }
     } else if (val.length > 0) {
       card.style.display = 'none';
-      if (val.length >= CODIGO_PRIVADO.length) {
+      if (val.length >= accessCode.code.length) {
         msg.style.display = 'block';
         msg.style.color = 'var(--gulf-orange)';
         msg.textContent = 'Código no válido';
@@ -1025,13 +1043,11 @@ nav {
     if (!selectedCupo) return;
     const box = document.getElementById('resumenBox');
     box.style.display = 'block';
-    const total = selectedCupo.precio + (addonSelected ? 30 : 0);
-    const usdValues = {1: 60, 2: 80, 3: 90, 4: 154000};
-    const usdMap = {60: 60, 80: 80, 90: 90, 100: 100};
-    const usd = selectedCupo.precio;
-    document.getElementById('res-cupo-nombre').textContent = selectedCupo.nombre + ' — USD ' + usd;
+    const addonPrice = SEMINARIO_CONFIG.specialPractice.priceUsd;
+    const totalUsd = selectedCupo.precio + (addonSelected ? addonPrice : 0);
+    document.getElementById('res-cupo-nombre').textContent = selectedCupo.nombre + ' — USD ' + selectedCupo.precio;
     document.getElementById('res-addon-line').style.display = addonSelected ? 'flex' : 'none';
-    const totalUsd = selectedCupo.precio + (addonSelected ? 30 : 0);
+    document.getElementById('res-addon-price').textContent = 'USD ' + addonPrice;
     document.getElementById('res-total').textContent = totalUsd;
   }
 
@@ -1064,7 +1080,7 @@ nav {
     if (!clausulaAccepted) { document.getElementById('err-clausula').classList.add('show'); valid = false; }
     if (!valid) return;
 
-    const total = selectedCupo.precio + (addonSelected ? 30 : 0);
+    const total = selectedCupo.precio + (addonSelected ? SEMINARIO_CONFIG.specialPractice.priceUsd : 0);
     const nombre = document.getElementById('nombre').value.trim() + ' ' + document.getElementById('apellido').value.trim();
     document.getElementById('successDetails').innerHTML = `
       <div class="dr"><span>Inscripto</span><strong>${nombre}</strong></div>
@@ -1082,6 +1098,9 @@ nav {
     document.getElementById('successScreen').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  renderCupos();
+  renderAddon();
 </script>
 </body>
 </html>
