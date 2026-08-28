@@ -21,10 +21,10 @@ const SEMINARIO_CONFIG = {
   // longer be selected on the registration page. Do not remove a tier that
   // already has registrations tied to it.
   tiers: [
-    { id: 'super-early-bird', name: 'Super Early Bird', priceUsd: 70,  deadline: 'hasta el 31 de julio',           slots: 25, soldOut: false },
-    { id: 'early-bird',       name: 'Early Bird',        priceUsd: 80,  deadline: 'hasta 23 septiembre 2026',       slots: 25, soldOut: false, featured: true },
-    { id: 'regular',          name: 'Regular',           priceUsd: 90,  deadline: 'hasta 23 octubre 2026',          slots: 25, soldOut: false },
-    { id: 'last-minute',      name: 'Last Minute',       priceUsd: 110, deadline: 'hasta 21 noviembre · en puerta', slots: 25, soldOut: false },
+    { id: 'super-early-bird', name: 'Super Early Bird', priceUsd: 80,  deadline: 'hasta el 4 de septiembre 2026',           slots: 20, soldOut: false },
+    { id: 'early-bird',       name: 'Early Bird',        priceUsd: 90,  deadline: 'hasta 23 septiembre 2026',       slots: 20, soldOut: false, featured: true },
+    { id: 'regular',          name: 'Regular',           priceUsd: 100,  deadline: 'hasta 23 octubre 2026',          slots: 20, soldOut: false },
+    { id: 'last-minute',      name: 'Last Minute',       priceUsd: 110, deadline: 'hasta 21 noviembre · en puerta', slots: 20, soldOut: false },
   ],
 
   // Hidden tier unlocked on the registration page by entering `code`.
@@ -34,14 +34,18 @@ const SEMINARIO_CONFIG = {
     name: 'Cupo Privado',
     priceUsd: 60,
     deadline: 'Solo con código de acceso',
-    slots: 25,
+    slots: 10,
     soldOut: false,
   },
 
   // Optional add-on practice session, offered alongside every tier.
+  // Same soldOut behavior as the tiers above — once its own slots fill up,
+  // set soldOut: true to stop new selections regardless of which cupo is chosen.
   specialPractice: {
     label: '+ Práctica especial · Viernes 20 de noviembre',
     priceUsd: 30,
+    slots: 20,
+    soldOut: false,
   },
 
 };

@@ -261,6 +261,8 @@ nav {
 }
 .addon-card:hover { background: var(--mid); }
 .addon-card.selected { background: rgba(244,121,32,0.06); border-color: var(--gulf-orange); }
+.addon-card.sold-out { cursor: not-allowed; opacity: 0.45; border-color: rgba(255,255,255,0.15); }
+.addon-card.sold-out:hover { background: var(--darker); }
 .addon-left { display: flex; align-items: center; gap: 14px; }
 .addon-check {
   width: 20px; height: 20px;
@@ -981,8 +983,10 @@ nav {
   function renderAddon() {
     const addon = SEMINARIO_CONFIG.specialPractice;
     document.getElementById('addonLabel').textContent = addon.label;
-    document.getElementById('addonPrice').innerHTML =
-      `+ USD ${addon.priceUsd} <small>≈ $${formatArs(addon.priceUsd)} ARS</small>`;
+    document.getElementById('addonPrice').innerHTML = addon.soldOut
+      ? 'Agotado'
+      : `+ USD ${addon.priceUsd} <small>≈ $${formatArs(addon.priceUsd)} ARS</small>`;
+    document.getElementById('addonCard').classList.toggle('sold-out', addon.soldOut);
   }
 
   function checkCodigo(val) {
@@ -1030,6 +1034,7 @@ nav {
   }
 
   function toggleAddon() {
+    if (SEMINARIO_CONFIG.specialPractice.soldOut) return;
     addonSelected = !addonSelected;
     document.getElementById('addonCard').classList.toggle('selected', addonSelected);
     document.getElementById('addonCheck').textContent = addonSelected ? '✓' : '';

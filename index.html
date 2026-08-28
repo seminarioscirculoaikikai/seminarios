@@ -11,6 +11,7 @@
   --gulf-orange: #F47920;
   --deep: #0a1628;
   --darker: #060e1a;
+  --deeper: #060e1a;
   --white: #ffffff;
   --light: #e8f4f8;
   --muted: rgba(255,255,255,0.5);
@@ -280,13 +281,9 @@ section {
   padding: 80px 0;
 }
 .sensei-inner {
-  max-width: 1100px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 0 48px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
 }
 .sensei-bio p {
   font-size: 15px;
@@ -321,32 +318,8 @@ section {
   color: var(--muted);
   margin-top: 4px;
 }
-.sensei-image-col {
-  position: relative;
-}
-.sensei-image-frame {
-  position: relative;
-  background: linear-gradient(135deg, rgba(0,169,206,0.1), rgba(244,121,32,0.1));
-  border: 1px solid rgba(0,169,206,0.2);
-  padding: 3px;
-}
-.sensei-image-frame::before {
-  content: '';
-  position: absolute;
-  top: -12px; right: -12px;
-  width: 60px; height: 60px;
-  border-top: 3px solid var(--gulf-orange);
-  border-right: 3px solid var(--gulf-orange);
-}
-.sensei-image-frame::after {
-  content: '';
-  position: absolute;
-  bottom: -12px; left: -12px;
-  width: 60px; height: 60px;
-  border-bottom: 3px solid var(--gulf-blue);
-  border-left: 3px solid var(--gulf-blue);
-}
-.sensei-img {
+.horii-banner { width: 100%; }
+.horii-banner img {
   width: 100%;
   height: auto;
   display: block;
@@ -445,6 +418,12 @@ section {
   flex-wrap: wrap;
   gap: 16px;
 }
+.addon-banner.sold-out {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.1);
+  border-left-color: rgba(255,255,255,0.2);
+  opacity: 0.6;
+}
 .addon-banner-left strong {
   display: block;
   font-family: 'Barlow Condensed', sans-serif;
@@ -472,6 +451,12 @@ section {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-top: 40px;
+}
+.programa-disclaimer {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 16px;
 }
 .programa-day {
   border: 1px solid rgba(0,169,206,0.15);
@@ -699,7 +684,8 @@ footer {
   nav { padding: 20px 24px; }
   .hero-content { padding: 0 24px 60px; }
   section { padding: 60px 24px; }
-  .sensei-inner, .lugar-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
+  .sensei-inner { padding: 0 24px; }
+  .lugar-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
   .programa-grid { grid-template-columns: 1fr; }
   .tickets-inner, .tickets-section .section-eyebrow, .tickets-section .section-title { padding-left: 24px; padding-right: 24px; }
   .cta-inner { padding: 60px 24px; }
@@ -711,6 +697,11 @@ footer {
 </head>
 <body>
 
+<!-- BANNER -->
+<div class="horii-banner">
+  <img src="horii.jpg" alt="Etsuji Horii Shihan · Seminario Internacional de Aikido · Córdoba, Argentina · Noviembre 2026">
+</div>
+
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
@@ -720,7 +711,7 @@ footer {
 
   <nav>
     <div class="nav-logo">Círculo <span>Aikikai</span> — COR/ARG</div>
-    <a href="#inscripcion" class="nav-cta">Inscribirse</a>
+    <a href="inscripcion_seminario_aikido.html" class="nav-cta">Inscribirse</a>
   </nav>
 
   <div class="hero-content">
@@ -739,7 +730,7 @@ footer {
       <div class="hero-rank-dot"></div>
       <div class="hero-rank-badge">Shihan</div>
       <div class="hero-rank-dot"></div>
-      <div class="hero-rank-badge">Madrid · España</div>
+      <div class="hero-rank-badge">Sanda · Japón</div>
     </div>
 
     <div class="hero-date-strip">
@@ -753,7 +744,7 @@ footer {
       </div>
       <div class="date-block">
         <span class="date-label">Sede</span>
-        <span class="date-value">Córdoba, ARG</span>
+        <span class="date-value">COR/ARG</span>
       </div>
       <div class="date-block">
         <span class="date-label">Año</span>
@@ -769,7 +760,7 @@ footer {
     <div class="sensei-bio">
       <div class="section-eyebrow">El instructor</div>
       <div class="section-title">Etsuji <em>Horii</em><br>Shihan</div>
-      <p>Etsuji Horii Sensei es uno de los referentes más destacados del Aikido en Europa. Con más de cuatro décadas de práctica ininterrumpida, obtuvo su <strong>7° Dan Aikikai</strong> —el rango más alto reconocido por el Hombu Dojo de Tokio— y dirige actualmente su dojo en <strong>Madrid, España</strong>.</p>
+      <p>Etsuji Horii Sensei es uno de los referentes más destacados del Aikido a nivel internacional. Con más de cuatro décadas de práctica ininterrumpida, obtuvo su <strong>7° Dan Aikikai</strong> —el rango más alto reconocido por el Hombu Dojo de Tokio— y dirige actualmente su dojo en <strong>Sanda, Japón</strong>.</p>
       <p>Su enseñanza combina la precisión técnica de la tradición japonesa con una pedagogía accesible y profunda. Ha impartido seminarios en más de 20 países, formando a instructores y practicantes de todos los niveles.</p>
       <p>Esta es su <strong>primera visita a Córdoba, Argentina</strong>, organizada por el Círculo Aikikai Asociación Civil.</p>
       <div class="sensei-stats">
@@ -791,11 +782,6 @@ footer {
         </div>
       </div>
     </div>
-    <div class="sensei-image-col">
-      <div class="sensei-image-frame">
-        <img class="sensei-img" src="horii.jpg" alt="Etsuji Horii Shihan">
-      </div>
-    </div>
   </div>
 </div>
 
@@ -814,7 +800,7 @@ footer {
       </div>
       <div class="programa-day-body">
         <div class="programa-item">
-          <span class="programa-item-time">19:30 – 21:30</span>
+          <span class="programa-item-time">18:00 – 20:00</span>
           <span class="programa-item-desc">Apertura, bienvenida y práctica privada con Horii Sensei · cupo reducido</span>
         </div>
       </div>
@@ -829,11 +815,11 @@ footer {
       </div>
       <div class="programa-day-body">
         <div class="programa-item">
-          <span class="programa-item-time">09:00 – 13:00</span>
-          <span class="programa-item-desc">Mañana — Acreditación, inauguración y práctica con Horii Sensei</span>
+          <span class="programa-item-time">10:00 – 12:00</span>
+          <span class="programa-item-desc">Mañana — Práctica con Horii Sensei</span>
         </div>
         <div class="programa-item">
-          <span class="programa-item-time">15:30 – 18:00</span>
+          <span class="programa-item-time">16:00 – 18:00</span>
           <span class="programa-item-desc">Tarde — Práctica y cierre del día</span>
         </div>
       </div>
@@ -848,16 +834,13 @@ footer {
       </div>
       <div class="programa-day-body">
         <div class="programa-item">
-          <span class="programa-item-time">09:30 – 12:30</span>
-          <span class="programa-item-desc">Mañana — Práctica</span>
-        </div>
-        <div class="programa-item">
-          <span class="programa-item-time">15:00 – 17:30</span>
-          <span class="programa-item-desc">Tarde — Práctica final y ceremonia de cierre</span>
+          <span class="programa-item-time">10:00 – 12:00</span>
+          <span class="programa-item-desc">Práctica final y cierre</span>
         </div>
       </div>
     </div>
   </div>
+  <p class="programa-disclaimer">* Horarios sujetos a modificaciones</p>
 </section>
 
 <!-- TICKETS -->
@@ -867,7 +850,7 @@ footer {
     <div class="section-title">Inscripción <em>escalonada</em></div>
     <div class="tickets-grid" id="ticketsGrid"></div>
 
-    <div class="addon-banner">
+    <div class="addon-banner" id="addonBanner">
       <div class="addon-banner-left">
         <strong id="addonBannerLabel"></strong>
         <p>Práctica privada con Horii Sensei · cupo reducido · exclusivo inscriptos al seminario</p>
@@ -938,7 +921,6 @@ footer {
   </div>
   <div class="footer-links">
     <a href="#">Inicio</a>
-    <a href="#inscripcion">Inscripción</a>
     <a href="#lugar">Contacto</a>
   </div>
   <div class="footer-copy">© 2026 Círculo Aikikai A.C.</div>
@@ -970,8 +952,10 @@ footer {
   }
 
   function renderAddon() {
-    document.getElementById('addonBannerLabel').textContent = SEMINARIO_CONFIG.specialPractice.label;
-    document.getElementById('addonBannerPrice').textContent = `+ USD ${SEMINARIO_CONFIG.specialPractice.priceUsd}`;
+    const addon = SEMINARIO_CONFIG.specialPractice;
+    document.getElementById('addonBannerLabel').textContent = addon.label;
+    document.getElementById('addonBannerPrice').textContent = addon.soldOut ? 'Agotado' : `+ USD ${addon.priceUsd}`;
+    document.getElementById('addonBanner').classList.toggle('sold-out', addon.soldOut);
   }
 
   document.getElementById('contactEmail').textContent = SEMINARIO_CONFIG.contactEmail;
