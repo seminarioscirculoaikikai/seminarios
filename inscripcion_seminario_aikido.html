@@ -738,8 +738,9 @@ nav {
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>DNI / Documento</label>
+        <label>DNI / Documento <span class="req">*</span></label>
         <input type="text" id="dni" placeholder="Número de documento">
+        <span class="error-msg" id="err-dni">Campo requerido</span>
       </div>
       <div class="form-group">
         <label>Fecha de nacimiento</label>
@@ -1090,6 +1091,7 @@ nav {
     valid = validateField('email', 'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) && valid;
     valid = validateField('telefono', 'err-telefono', v => v.length > 6 && /^[0-9+\-\s()]+$/.test(v)) && valid;
     valid = validateField('ciudad', 'err-ciudad', v => v.length > 1) && valid;
+    valid = validateField('dni', 'err-dni', v => v.length > 1) && valid;
     valid = validateField('rango', 'err-rango', v => v !== '') && valid;
     valid = validateField('dojo', 'err-dojo', v => v.length > 1) && valid;
     valid = validateField('emergenciaNombre', 'err-emergenciaNombre', v => v.length > 1) && valid;
