@@ -962,6 +962,10 @@ footer {
   document.getElementById('contactEmail').textContent = SEMINARIO_CONFIG.contactEmail;
   renderTickets();
   renderAddon();
+  SEMINARIO_CONFIG.loadLiveTierData().then(function () {
+    renderTickets();
+    renderAddon();
+  });
 </script>
 
 </body>

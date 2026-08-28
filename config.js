@@ -49,3 +49,24 @@ const SEMINARIO_CONFIG = {
   },
 
 };
+
+// Fetches live price/slot/soldOut data from the "Precios" and "Inscripciones"
+// sheets (via the Apps Script's doGet) and overrides the static tiers above.
+// If the request fails for any reason, the static values above are used as-is —
+// call this before rendering, but don't let a failure block the page.
+SEMINARIO_CONFIG.loadLiveTierData = async function () {
+  try {
+    const res = await fetch(SEMINARIO_CONFIG.registrationEndpoint, { method: 'GET' });
+    const data = await res.json();
+    if (!data.ok || !Array.isArray(data.tiers)) throw new Error('respuesta inválida');
+    data.tiers.forEach(function (live) {
+      const tier = SEMINARIO_CONFIG.tiers.find(function (t) { return t.id === live.id; });
+      if (!tier) return;
+      tier.priceUsd = live.priceUsd;
+      tier.slots = live.slots;
+      tier.soldOut = tier.soldOut || live.soldOut;
+    });
+  } catch (err) {
+    // Sin conexión o el endpoint falló — se mantienen los valores estáticos de arriba.
+  }
+};

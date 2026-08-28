@@ -732,8 +732,22 @@ nav {
         <span class="error-msg" id="err-ciudad">Campo requerido</span>
       </div>
       <div class="form-group">
-        <label>Provincia / País</label>
-        <input type="text" id="provincia" placeholder="Córdoba / Argentina">
+        <label>Provincia</label>
+        <input type="text" id="provincia" placeholder="Córdoba">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>País</label>
+        <input type="text" id="pais" placeholder="Argentina">
+      </div>
+      <div class="form-group">
+        <label>Género</label>
+        <select id="genero">
+          <option value="">No especificado</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Femenino">Femenino</option>
+        </select>
       </div>
     </div>
     <div class="form-row">
@@ -1106,7 +1120,8 @@ nav {
 
     const payload = {
       nombre: val('nombre'), apellido: val('apellido'), email: val('email'), telefono: val('telefono'),
-      ciudad: val('ciudad'), provincia: val('provincia'), dni: val('dni'), nacimiento: val('nacimiento'),
+      ciudad: val('ciudad'), provincia: val('provincia'), pais: val('pais'), genero: document.getElementById('genero').value,
+      dni: val('dni'), nacimiento: val('nacimiento'),
       rango: document.getElementById('rango').value, anios: document.getElementById('anios').value,
       dojo: val('dojo'), agrupacion: val('agrupacion'), instructor: val('instructor'),
       obraSocial: val('obraSocial'), nroAfiliado: val('nroAfiliado'), medico: val('medico'),
@@ -1155,8 +1170,10 @@ nav {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  renderCupos();
-  renderAddon();
+  SEMINARIO_CONFIG.loadLiveTierData().then(function () {
+    renderCupos();
+    renderAddon();
+  });
 </script>
 </body>
 </html>
