@@ -65,6 +65,14 @@ SEMINARIO_CONFIG.loadLiveTierData = async function () {
         addon.soldOut = addon.soldOut || live.soldOut;
         return;
       }
+      // 'access-code' corresponde al Cupo Privado (accessCode), no a un tier público.
+      if (live.id === 'access-code') {
+        const ac = SEMINARIO_CONFIG.accessCode;
+        ac.priceUsd = live.priceUsd;
+        ac.slots = live.slots;
+        ac.soldOut = ac.soldOut || live.soldOut;
+        return;
+      }
       const tier = SEMINARIO_CONFIG.tiers.find(function (t) { return t.id === live.id; });
       if (!tier) return;
       tier.priceUsd = live.priceUsd;
