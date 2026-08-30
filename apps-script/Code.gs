@@ -1,4 +1,5 @@
 var MAIN_EMAIL = 'seminarios.circuloaikikai@gmail.com';
+var EXTRA_CC = ['miguelalibertti@circuloaikikai.com', 'aidamontenegro@circuloaikikai.com'];
 
 var HEADERS = [
   'Fecha', 'Nombre', 'Apellido', 'Email', 'Teléfono', 'Ciudad', 'Provincia',
@@ -78,7 +79,7 @@ function doPost(e) {
       '\nContacto de emergencia: ' + data.emergenciaNombre + ' — ' + data.emergenciaTel +
       '\n\n---\nEste email es tu constancia de inscripción. Recordá que la inscripción se confirma una vez acreditado el pago.';
 
-    var ccList = [data.contactEmail, data.email].filter(function (x) { return !!x; }).join(',');
+    var ccList = [data.contactEmail, data.email].concat(EXTRA_CC).filter(function (x) { return !!x; }).join(',');
 
     MailApp.sendEmail({
       to: MAIN_EMAIL,

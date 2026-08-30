@@ -12,19 +12,15 @@ const SEMINARIO_CONFIG = {
   // Apps Script project bound to the "Inscripciones" spreadsheet.
   registrationEndpoint: 'https://script.google.com/macros/s/AKfycby5wimo2vAWHCmvAZ62HsoDEOpjEnAF2nfHdjr-S6K0Knqbf2yrkBxwaPDJhOVdAsvd/exec',
 
-  // ARS shown as an estimate next to each USD price ("≈ $X ARS"). Update this
-  // to the current exchange rate — everything recalculates from this one value.
-  exchangeRateArsPerUsd: 1550,
-
   // Public registration tiers, in order. To close a tier once its slots are
   // full, set soldOut: true — it stays visible but shows "Agotado" and can no
   // longer be selected on the registration page. Do not remove a tier that
   // already has registrations tied to it.
   tiers: [
-    { id: 'super-early-bird', name: 'Super Early Bird', priceUsd: 80,  deadline: 'hasta el 20 de septiembre de 2026', slots: 20, soldOut: false },
-    { id: 'early-bird',       name: 'Early Bird',        priceUsd: 90,  deadline: 'hasta el 10 de octubre de 2026',    slots: 20, soldOut: false, featured: true },
-    { id: 'regular',          name: 'Regular',           priceUsd: 100, deadline: 'hasta el 30 de octubre de 2026',    slots: 20, soldOut: false },
-    { id: 'last-minute',      name: 'Last Minute',       priceUsd: 110, deadline: 'hasta el 20 de noviembre de 2026',  slots: 20, soldOut: false },
+    { id: 'super-early-bird', name: 'Cupo 1', priceUsd: 80,  deadline: 'hasta el 20 de septiembre de 2026', slots: 20, soldOut: false },
+    { id: 'early-bird',       name: 'Cupo 2',        priceUsd: 90,  deadline: 'hasta el 10 de octubre de 2026',    slots: 20, soldOut: false, featured: true },
+    { id: 'regular',          name: 'Cupo 3',           priceUsd: 100, deadline: 'hasta el 30 de octubre de 2026',    slots: 20, soldOut: false },
+    { id: 'last-minute',      name: 'Cupo 4',       priceUsd: 110, deadline: 'hasta el 20 de noviembre de 2026',  slots: 20, soldOut: false },
   ],
 
   // Hidden tier unlocked on the registration page by entering `code`.

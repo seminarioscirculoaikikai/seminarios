@@ -215,18 +215,12 @@ nav {
   letter-spacing: -0.01em;
 }
 .cupo-price span { font-size: 48px; color: var(--white); }
-.cupo-ars {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.35);
-  margin: 4px 0 10px;
-  font-style: italic;
-}
 .cupo-deadline {
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
+  margin-top: 8px;
   margin-bottom: 6px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-light);
@@ -683,7 +677,7 @@ nav {
   </div>
 
   <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;margin-bottom:12px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);line-height:1.7;">
-    ⚠ <strong style="color:rgba(255,255,255,0.65);font-weight:400;">Los valores son en dólares estadounidenses (USD).</strong> El monto en pesos argentinos es orientativo y se actualiza según el tipo de cambio vigente al momento del pago. <strong style="color:rgba(255,255,255,0.65);font-weight:400;">Lo que se abona es el equivalente en ARS al TC blue/MEP del día del pago.</strong>
+    ⚠ <strong style="color:rgba(255,255,255,0.65);font-weight:400;">Los valores son en dólares estadounidenses (USD).</strong>
   </div>
   <div class="addon-card" id="addonCard" onclick="toggleAddon()" style="margin-top:10px;">
     <div class="addon-left">
@@ -948,7 +942,6 @@ nav {
     <div class="resumen-label">Resumen de tu inscripción</div>
     <div class="resumen-line"><span>Seminario — Sáb 21 · Dom 22 Nov 2026</span><span id="res-cupo-nombre">—</span></div>
     <div class="resumen-line" id="res-addon-line" style="display:none;"><span>Práctica especial 20 nov</span><span id="res-addon-price">—</span></div>
-    <div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;margin-top:10px;font-style:italic;">El monto en ARS es referencial al TC actual. Lo que se abona es el valor en USD.</div>
     <div class="resumen-total">
       <span class="rtlabel">Total a abonar</span>
       <span class="rtamount">USD <span id="res-total">0</span></span>
@@ -978,10 +971,6 @@ nav {
 <script src="config.js"></script>
 <script>
 
-  function formatArs(usd) {
-    return Math.round(usd * SEMINARIO_CONFIG.exchangeRateArsPerUsd).toLocaleString('es-AR');
-  }
-
   function cupoCardHtml(tier, extraAttrs) {
     const soldOutClass = tier.soldOut ? ' sold-out' : '';
     const onclick = tier.soldOut ? '' : ` onclick="selectCupo(this, '${tier.id}', ${tier.priceUsd}, '${tier.name}')"`;
@@ -989,7 +978,6 @@ nav {
       <div class="cupo-card${soldOutClass}"${extraAttrs || ''}${onclick}>
         <div class="cupo-badge">${tier.name}</div>
         <div class="cupo-price">USD <span>${tier.priceUsd}</span></div>
-        <div class="cupo-ars">≈ $${formatArs(tier.priceUsd)} ARS al TC blue/MEP del día</div>
         <div class="cupo-deadline">${tier.deadline}</div>
         <div class="cupo-slots${soldOutClass}">${tier.soldOut ? 'Agotado' : `<strong>${tier.slots}</strong> cupos disponibles`}</div>
       </div>`;
@@ -1003,14 +991,19 @@ nav {
     grid.innerHTML = accessCardHtml + tiersHtml;
   }
 
+  // El Cupo Privado incluye la práctica especial sin cargo — sigue siendo
+  // seleccionable, pero a costo 0 en vez del precio normal.
+  function getAddonPrice() {
+    return (selectedCupo && selectedCupo.id === 'access-code') ? 0 : SEMINARIO_CONFIG.specialPractice.priceUsd;
+  }
+
   function renderAddon() {
     const addon = SEMINARIO_CONFIG.specialPractice;
+    const price = getAddonPrice();
     document.getElementById('addonLabel').textContent = addon.label;
     document.getElementById('addonDesc').textContent =
       `Clase especial con Horii Shihan · cupo máximo ${addon.slots} personas · exclusivo para inscriptos al seminario · hasta el 14 de noviembre`;
-    document.getElementById('addonPrice').innerHTML = addon.soldOut
-      ? 'Agotado'
-      : `+ USD ${addon.priceUsd} <small>≈ $${formatArs(addon.priceUsd)} ARS</small>`;
+    document.getElementById('addonPrice').textContent = addon.soldOut ? 'Agotado' : (price === 0 ? 'Incluido' : `+ USD ${price}`);
     document.getElementById('addonCard').classList.toggle('sold-out', addon.soldOut);
   }
 
@@ -1055,6 +1048,7 @@ nav {
     el.classList.add('selected');
     selectedCupo = { id, precio, nombre };
     document.getElementById('cupoAlert').style.display = 'none';
+    renderAddon();
     updateResumen();
   }
 
@@ -1086,11 +1080,11 @@ nav {
     if (!selectedCupo) return;
     const box = document.getElementById('resumenBox');
     box.style.display = 'block';
-    const addonPrice = SEMINARIO_CONFIG.specialPractice.priceUsd;
+    const addonPrice = getAddonPrice();
     const totalUsd = selectedCupo.precio + (addonSelected ? addonPrice : 0);
     document.getElementById('res-cupo-nombre').textContent = selectedCupo.nombre + ' — USD ' + selectedCupo.precio;
     document.getElementById('res-addon-line').style.display = addonSelected ? 'flex' : 'none';
-    document.getElementById('res-addon-price').textContent = 'USD ' + addonPrice;
+    document.getElementById('res-addon-price').textContent = addonPrice === 0 ? 'Incluido' : 'USD ' + addonPrice;
     document.getElementById('res-total').textContent = totalUsd;
   }
 
@@ -1125,7 +1119,7 @@ nav {
     if (!valid) return;
 
     const val = id => document.getElementById(id).value.trim();
-    const total = selectedCupo.precio + (addonSelected ? SEMINARIO_CONFIG.specialPractice.priceUsd : 0);
+    const total = selectedCupo.precio + (addonSelected ? getAddonPrice() : 0);
     const nombreCompleto = val('nombre') + ' ' + val('apellido');
 
     const payload = {
@@ -1171,7 +1165,7 @@ nav {
       <div class="dr"><span>Cupo</span><strong>${selectedCupo.nombre}</strong></div>
       ${addonSelected ? '<div class="dr"><span>Práctica 20 nov</span><strong>Incluida</strong></div>' : ''}
       <div class="dr"><span>Pago</span><strong>${selectedPago}</strong></div>
-      <div class="dr"><span>Total</span><strong>$${total.toLocaleString('es-AR')}</strong></div>
+      <div class="dr"><span>Total</span><strong>USD ${total}</strong></div>
     `;
     document.querySelector('.form-wrap').style.display = 'none';
     document.querySelector('.hero-strip').style.display = 'none';

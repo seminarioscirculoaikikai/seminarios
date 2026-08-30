@@ -376,16 +376,9 @@ section {
   font-size: 52px;
   line-height: 1;
   color: var(--white);
-  margin-bottom: 4px;
+  margin-bottom: 16px;
 }
 .ticket-price sup { font-size: 22px; vertical-align: super; color: var(--gulf-blue); }
-.ticket-price-ars {
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  color: rgba(255,255,255,0.35);
-  font-style: italic;
-  margin-bottom: 12px;
-}
 .ticket-deadline {
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -930,17 +923,12 @@ footer {
 
 <script src="config.js"></script>
 <script>
-  function formatArs(usd) {
-    return (usd * SEMINARIO_CONFIG.exchangeRateArsPerUsd).toLocaleString('es-AR');
-  }
-
   function renderTickets() {
     const grid = document.getElementById('ticketsGrid');
     grid.innerHTML = SEMINARIO_CONFIG.tiers.map(tier => `
       <div class="ticket-card${tier.featured ? ' featured' : ''}${tier.soldOut ? ' sold-out' : ''}">
         <div class="ticket-badge">${tier.name}</div>
         <div class="ticket-price"><sup>USD</sup>${tier.priceUsd}</div>
-        <div class="ticket-price-ars">≈ $${formatArs(tier.priceUsd)} ARS</div>
         <div class="ticket-deadline">${tier.deadline}</div>
         <div class="ticket-slots${tier.soldOut ? ' sold-out' : ''}">${
           tier.soldOut ? 'Agotado' : `<strong>${tier.slots} cupos</strong> disponibles`
