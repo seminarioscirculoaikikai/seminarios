@@ -143,6 +143,8 @@ nav {
   z-index: 5;
   padding: 0 48px 80px;
   max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .hero-edition {
@@ -291,6 +293,7 @@ section {
   line-height: 1.8;
   color: rgba(255,255,255,0.7);
   margin-bottom: 16px;
+  text-align: justify;
 }
 .sensei-bio p strong { color: var(--white); font-weight: 500; }
 .sensei-stats {
@@ -683,7 +686,8 @@ footer {
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   nav { padding: 20px 24px; }
-  .hero-content { padding: 0 24px 60px; }
+  .hero { min-height: auto; }
+  .hero-content { padding: 110px 24px 60px; }
   section { padding: 60px 24px; }
   .sensei-inner { padding: 0 24px; }
   .lugar-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
@@ -798,7 +802,7 @@ footer {
       <div class="programa-day-body">
         <div class="programa-item">
           <span class="programa-item-time">18:00 – 20:00</span>
-          <span class="programa-item-desc">Apertura, bienvenida y práctica privada con Horii Sensei · cupo reducido</span>
+          <span class="programa-item-desc">Práctica privada con Horii Sensei · cupo reducido</span>
         </div>
       </div>
     </div>
@@ -813,11 +817,11 @@ footer {
       <div class="programa-day-body">
         <div class="programa-item">
           <span class="programa-item-time">10:00 – 12:00</span>
-          <span class="programa-item-desc">Mañana — Práctica con Horii Sensei</span>
+          <span class="programa-item-desc">Apertura del seminario y primera práctica</span>
         </div>
         <div class="programa-item">
           <span class="programa-item-time">16:00 – 18:00</span>
-          <span class="programa-item-desc">Tarde — Práctica y cierre del día</span>
+          <span class="programa-item-desc">Segunda práctica</span>
         </div>
       </div>
     </div>
@@ -832,7 +836,7 @@ footer {
       <div class="programa-day-body">
         <div class="programa-item">
           <span class="programa-item-time">10:00 – 12:00</span>
-          <span class="programa-item-desc">Práctica final y cierre</span>
+          <span class="programa-item-desc">Última práctica y cierre del seminario</span>
         </div>
       </div>
     </div>
