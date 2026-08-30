@@ -236,6 +236,12 @@ nav {
   color: rgba(255,255,255,0.55);
 }
 .cupo-slots strong { color: var(--gulf-orange); font-weight: 400; }
+.section-disclaimer {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  margin-top: 16px;
+}
 .cupo-card.sold-out { cursor: not-allowed; opacity: 0.45; }
 .cupo-card.sold-out:hover { background: var(--darker); }
 .cupo-slots.sold-out {
@@ -684,11 +690,12 @@ nav {
       <div class="addon-check" id="addonCheck"></div>
       <div class="addon-info">
         <strong id="addonLabel"></strong>
-        <p>Clase especial con Horii Shihan · cupo reducido · exclusivo para inscriptos al seminario · hasta el 14 de noviembre</p>
+        <p id="addonDesc"></p>
       </div>
     </div>
     <div class="addon-price" id="addonPrice"></div>
   </div>
+  <p class="section-disclaimer">* Cada cupo cierra al agotarse o al llegar la fecha límite, lo que ocurra primero.</p>
 </div>
 
 <!-- FORM -->
@@ -870,6 +877,10 @@ nav {
         <div class="pago-icon">🏦</div>
         <div class="pago-label">Transferencia USD</div>
       </div>
+      <div class="pago-opt" onclick="selectPago(this,'transferencia-ars')">
+        <div class="pago-icon">🏦</div>
+        <div class="pago-label">Transferencia ARS</div>
+      </div>
       <div class="pago-opt" onclick="selectPago(this,'efectivo')">
         <div class="pago-icon">💵</div>
         <div class="pago-label">Efectivo (coordinar)</div>
@@ -884,6 +895,15 @@ nav {
       <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;">
         Alias · Cuenta USD BBVA Argentina<br>
         Transferencia directa en dólares estadounidenses.<br>
+        <span style="color:rgba(255,255,255,0.35);font-size:11px;">Una vez realizada, enviá el comprobante por WhatsApp o email para confirmar tu inscripción.</span>
+      </div>
+    </div>
+    <div id="info-transferencia-ars" style="display:none;margin-top:14px;background:rgba(0,169,206,0.05);border:1px solid rgba(0,169,206,0.2);border-left:4px solid var(--gulf-blue);padding:20px 20px;">
+      <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gulf-blue);margin-bottom:10px;">Datos para transferencia ARS</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;letter-spacing:0.05em;margin-bottom:6px;">AikidoCAP</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;">
+        Alias · Cuenta ARS BBVA Argentina<br>
+        Transferencia directa en pesos argentinos.<br>
         <span style="color:rgba(255,255,255,0.35);font-size:11px;">Una vez realizada, enviá el comprobante por WhatsApp o email para confirmar tu inscripción.</span>
       </div>
     </div>
@@ -922,6 +942,7 @@ nav {
         <li><strong>Autorización de primeros auxilios.</strong> Autorizo expresamente a los organizadores a disponer los primeros auxilios que estimen necesarios en caso de emergencia, hasta tanto intervenga personal médico competente, sin que ello implique responsabilidad alguna para la organización.</li>
         <li><strong>Autorización de imagen.</strong> Autorizo a <strong>Círculo Aikikai Asociación Civil</strong> a utilizar fotografías y/o videos en los que pueda aparecer, obtenidos durante el evento, con fines institucionales, educativos y de difusión del Aikido, sin derecho a compensación económica.</li>
         <li><strong>Jurisdicción.</strong> Para cualquier controversia derivada de la presente relación, las partes se someten a la jurisdicción de los Tribunales Ordinarios de la ciudad de Córdoba, República Argentina, con renuncia expresa a cualquier otro fuero que pudiera corresponder.</li>
+        <li><strong>Código de conducta.</strong> El participante y las personas que eventualmente lo acompañen aceptan cumplir fielmente todas y cada una de las directivas que los organizadores les den directa o indirectamente, ya sea antes del evento, durante él o después de finalizado.</li>
       </ol>
         <p>La presente declaración tiene carácter de <strong>declaración jurada</strong> y produce plenos efectos legales desde el momento de la aceptación electrónica, de conformidad con la <strong>Ley 25.506 de Firma Digital</strong> y el <strong>Código Civil y Comercial de la Nación Argentina</strong>.</p>
       </div>
@@ -998,6 +1019,8 @@ nav {
   function renderAddon() {
     const addon = SEMINARIO_CONFIG.specialPractice;
     document.getElementById('addonLabel').textContent = addon.label;
+    document.getElementById('addonDesc').textContent =
+      `Clase especial con Horii Shihan · cupo máximo ${addon.slots} personas · exclusivo para inscriptos al seminario · hasta el 14 de noviembre`;
     document.getElementById('addonPrice').innerHTML = addon.soldOut
       ? 'Agotado'
       : `+ USD ${addon.priceUsd} <small>≈ $${formatArs(addon.priceUsd)} ARS</small>`;
@@ -1062,6 +1085,7 @@ nav {
     selectedPago = tipo;
     document.getElementById('err-pago').classList.remove('show');
     document.getElementById('info-transferencia').style.display = tipo === 'transferencia' ? 'block' : 'none';
+    document.getElementById('info-transferencia-ars').style.display = tipo === 'transferencia-ars' ? 'block' : 'none';
     document.getElementById('info-efectivo').style.display = tipo === 'efectivo' ? 'block' : 'none';
   }
 

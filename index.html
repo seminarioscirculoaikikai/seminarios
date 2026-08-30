@@ -453,7 +453,7 @@ section {
   gap: 16px;
   margin-top: 40px;
 }
-.programa-disclaimer {
+.section-disclaimer {
   font-size: 12px;
   color: var(--muted);
   font-style: italic;
@@ -698,11 +698,6 @@ footer {
 </head>
 <body>
 
-<!-- BANNER -->
-<div class="horii-banner">
-  <img src="horii.jpg" alt="Etsuji Horii Shihan · Seminario Internacional de Aikido · Córdoba, Argentina · Noviembre 2026">
-</div>
-
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
@@ -761,8 +756,9 @@ footer {
     <div class="sensei-bio">
       <div class="section-eyebrow">El instructor</div>
       <div class="section-title">Etsuji <em>Horii</em><br>Shihan</div>
-      <p>Etsuji Horii Sensei es uno de los referentes más destacados del Aikido a nivel internacional. Con más de cuatro décadas de práctica ininterrumpida, obtuvo su <strong>7° Dan Aikikai</strong> —el rango más alto reconocido por el Hombu Dojo de Tokio— y dirige actualmente su dojo en <strong>Sanda, Japón</strong>.</p>
-      <p>Su enseñanza combina la precisión técnica de la tradición japonesa con una pedagogía accesible y profunda. Ha impartido seminarios en más de 20 países, formando a instructores y practicantes de todos los niveles.</p>
+      <p>Etsuji Horii Shihan comenzó su práctica de Aikido en <strong>1978</strong>, a los 14 años. En 1985 ingresó al <strong>Aikido Hombu Dojo</strong> de Tokio como uchi-deshi, donde vivió durante tres años dedicado a la práctica y a servir de otomo para los Sensei, incluyendo viajes al extranjero junto al Segundo Doshu, <strong>Kisshomaru Ueshiba</strong>, con quien viajó a Argentina.</p>
+      <p>Permaneció en el Hombu Dojo de Tokio durante diez años, hasta que regresó a la región de Kansai para enseñar Aikido. Allí fundó el <strong>Aiokai Aikido Dojo</strong> en Sanda, Kobe, donde continúa enseñando y promoviendo el Aikido a nivel nacional e internacional a través de seminarios.</p>
+      <p>Actualmente ostenta el rango de <strong>7° Dan Aikikai</strong> y el título de Shihan. Su estilo de enseñanza se caracteriza por centrarse en los fundamentos de base.</p>
       <p>Esta es su <strong>primera visita a Córdoba, Argentina</strong>, organizada por el Círculo Aikikai Asociación Civil.</p>
       <div class="sensei-stats">
         <div class="stat-box">
@@ -796,7 +792,7 @@ footer {
         <div class="programa-day-num">20</div>
         <div class="programa-day-info">
           <span class="programa-day-name">Viernes</span>
-          <span class="programa-day-type">Práctica especial · Add-on</span>
+          <span class="programa-day-type">Práctica especial</span>
         </div>
       </div>
       <div class="programa-day-body">
@@ -841,7 +837,7 @@ footer {
       </div>
     </div>
   </div>
-  <p class="programa-disclaimer">* Horarios sujetos a modificaciones</p>
+  <p class="section-disclaimer">* Horarios sujetos a modificaciones</p>
 </section>
 
 <!-- TICKETS -->
@@ -854,10 +850,11 @@ footer {
     <div class="addon-banner" id="addonBanner">
       <div class="addon-banner-left">
         <strong id="addonBannerLabel"></strong>
-        <p>Práctica privada con Horii Sensei · cupo reducido · exclusivo inscriptos al seminario</p>
+        <p id="addonBannerDesc"></p>
       </div>
       <div class="addon-banner-price" id="addonBannerPrice"></div>
     </div>
+    <p class="section-disclaimer">* Cada categoría cierra al agotarse el cupo o al llegar la fecha límite, lo que ocurra primero.</p>
   </div>
 </div>
 
@@ -955,6 +952,8 @@ footer {
   function renderAddon() {
     const addon = SEMINARIO_CONFIG.specialPractice;
     document.getElementById('addonBannerLabel').textContent = addon.label;
+    document.getElementById('addonBannerDesc').textContent =
+      `Práctica privada con Horii Sensei · cupo máximo ${addon.slots} personas · exclusivo inscriptos al seminario`;
     document.getElementById('addonBannerPrice').textContent = addon.soldOut ? 'Agotado' : `+ USD ${addon.priceUsd}`;
     document.getElementById('addonBanner').classList.toggle('sold-out', addon.soldOut);
   }
