@@ -991,19 +991,12 @@ nav {
     grid.innerHTML = accessCardHtml + tiersHtml;
   }
 
-  // El Cupo Privado incluye la práctica especial sin cargo — sigue siendo
-  // seleccionable, pero a costo 0 en vez del precio normal.
-  function getAddonPrice() {
-    return (selectedCupo && selectedCupo.id === 'access-code') ? 0 : SEMINARIO_CONFIG.specialPractice.priceUsd;
-  }
-
   function renderAddon() {
     const addon = SEMINARIO_CONFIG.specialPractice;
-    const price = getAddonPrice();
     document.getElementById('addonLabel').textContent = addon.label;
     document.getElementById('addonDesc').textContent =
       `Clase especial con Horii Shihan · cupo máximo ${addon.slots} personas · exclusivo para inscriptos al seminario · hasta el 14 de noviembre`;
-    document.getElementById('addonPrice').textContent = addon.soldOut ? 'Agotado' : (price === 0 ? 'Incluido' : `+ USD ${price}`);
+    document.getElementById('addonPrice').textContent = addon.soldOut ? 'Agotado' : `+ USD ${addon.priceUsd}`;
     document.getElementById('addonCard').classList.toggle('sold-out', addon.soldOut);
   }
 
@@ -1048,7 +1041,6 @@ nav {
     el.classList.add('selected');
     selectedCupo = { id, precio, nombre };
     document.getElementById('cupoAlert').style.display = 'none';
-    renderAddon();
     updateResumen();
   }
 
@@ -1080,11 +1072,11 @@ nav {
     if (!selectedCupo) return;
     const box = document.getElementById('resumenBox');
     box.style.display = 'block';
-    const addonPrice = getAddonPrice();
+    const addonPrice = SEMINARIO_CONFIG.specialPractice.priceUsd;
     const totalUsd = selectedCupo.precio + (addonSelected ? addonPrice : 0);
     document.getElementById('res-cupo-nombre').textContent = selectedCupo.nombre + ' — USD ' + selectedCupo.precio;
     document.getElementById('res-addon-line').style.display = addonSelected ? 'flex' : 'none';
-    document.getElementById('res-addon-price').textContent = addonPrice === 0 ? 'Incluido' : 'USD ' + addonPrice;
+    document.getElementById('res-addon-price').textContent = 'USD ' + addonPrice;
     document.getElementById('res-total').textContent = totalUsd;
   }
 
@@ -1119,7 +1111,7 @@ nav {
     if (!valid) return;
 
     const val = id => document.getElementById(id).value.trim();
-    const total = selectedCupo.precio + (addonSelected ? getAddonPrice() : 0);
+    const total = selectedCupo.precio + (addonSelected ? SEMINARIO_CONFIG.specialPractice.priceUsd : 0);
     const nombreCompleto = val('nombre') + ' ' + val('apellido');
 
     const payload = {
