@@ -974,10 +974,11 @@ nav {
   function cupoCardHtml(tier, extraAttrs) {
     const soldOutClass = tier.soldOut ? ' sold-out' : '';
     const onclick = tier.soldOut ? '' : ` onclick="selectCupo(this, '${tier.id}', ${tier.priceUsd}, '${tier.name}')"`;
+    const priceHtml = tier.priceUsd === 0 ? 'Gratis' : `USD <span>${tier.priceUsd}</span>`;
     return `
       <div class="cupo-card${soldOutClass}"${extraAttrs || ''}${onclick}>
         <div class="cupo-badge">${tier.name}</div>
-        <div class="cupo-price">USD <span>${tier.priceUsd}</span></div>
+        <div class="cupo-price">${priceHtml}</div>
         <div class="cupo-deadline">${tier.deadline}</div>
         <div class="cupo-slots${soldOutClass}">${tier.soldOut ? 'Agotado' : `<strong>${tier.slots}</strong> cupos disponibles`}</div>
       </div>`;
@@ -986,9 +987,11 @@ nav {
   function renderCupos() {
     const grid = document.getElementById('cuposGrid');
     const accessTier = Object.assign({ id: 'access-code' }, SEMINARIO_CONFIG.accessCode);
+    const guestTier = Object.assign({ id: 'guest-code' }, SEMINARIO_CONFIG.guestCode);
     const accessCardHtml = cupoCardHtml(accessTier, ' id="cupoAccessCode" style="display:none;"');
+    const guestCardHtml = cupoCardHtml(guestTier, ' id="cupoGuestCode" style="display:none;"');
     const tiersHtml = SEMINARIO_CONFIG.tiers.map(t => cupoCardHtml(t)).join('');
-    grid.innerHTML = accessCardHtml + tiersHtml;
+    grid.innerHTML = accessCardHtml + guestCardHtml + tiersHtml;
   }
 
   function renderAddon() {
@@ -1002,23 +1005,39 @@ nav {
 
   function checkCodigo(val) {
     const msg = document.getElementById('codigoMsg');
-    const card = document.getElementById('cupoAccessCode');
+    const accessCard = document.getElementById('cupoAccessCode');
+    const guestCard = document.getElementById('cupoGuestCode');
     const accessCode = SEMINARIO_CONFIG.accessCode;
-    if (val.trim().toUpperCase() === accessCode.code) {
+    const guestCode = SEMINARIO_CONFIG.guestCode;
+    const trimmed = val.trim().toUpperCase();
+    accessCard.style.display = 'none';
+    guestCard.style.display = 'none';
+
+    if (trimmed === accessCode.code) {
       if (accessCode.soldOut) {
-        card.style.display = 'none';
         msg.style.display = 'block';
         msg.style.color = 'var(--gulf-orange)';
         msg.textContent = 'Cupo especial agotado';
       } else {
-        card.style.display = 'block';
+        accessCard.style.display = 'block';
         msg.style.display = 'block';
         msg.style.color = 'var(--gulf-blue)';
         msg.textContent = '✓ Cupo especial desbloqueado';
       }
+    } else if (trimmed === guestCode.code) {
+      if (guestCode.soldOut) {
+        msg.style.display = 'block';
+        msg.style.color = 'var(--gulf-orange)';
+        msg.textContent = 'Cupo de invitado agotado';
+      } else {
+        guestCard.style.display = 'block';
+        msg.style.display = 'block';
+        msg.style.color = 'var(--gulf-blue)';
+        msg.textContent = '✓ Cupo de invitado desbloqueado';
+      }
     } else if (val.length > 0) {
-      card.style.display = 'none';
-      if (val.length >= accessCode.code.length) {
+      const maxLen = Math.max(accessCode.code.length, guestCode.code.length);
+      if (val.length >= maxLen) {
         msg.style.display = 'block';
         msg.style.color = 'var(--gulf-orange)';
         msg.textContent = 'Código no válido';
@@ -1026,7 +1045,6 @@ nav {
         msg.style.display = 'none';
       }
     } else {
-      card.style.display = 'none';
       msg.style.display = 'none';
     }
   }

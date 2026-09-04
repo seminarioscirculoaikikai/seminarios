@@ -145,14 +145,15 @@ function setupPreciosSheet() {
 
   sheet = ss.insertSheet('Precios');
   sheet.getRange('A1:E1').setValues([['id', 'nombre', 'precioUsd', 'cupos', 'cerrado manual']]).setFontWeight('bold');
-  sheet.getRange('A2:E6').setValues([
+  sheet.getRange('A2:E7').setValues([
     ['super-early-bird', 'Super Early Bird', 80, 20, false],
     ['early-bird', 'Early Bird', 90, 20, false],
     ['regular', 'Regular', 100, 20, false],
     ['last-minute', 'Last Minute', 110, 20, false],
     [CLASE_ESPECIAL_ID, 'Práctica privada', 30, 40, false],
+    ['guest-code', 'Invitado especial', 0, 10, false],
   ]);
-  sheet.getRange('E2:E6').insertCheckboxes();
+  sheet.getRange('E2:E7').insertCheckboxes();
   setPreciosFormulas(sheet);
   sheet.autoResizeColumns(1, 7);
 }

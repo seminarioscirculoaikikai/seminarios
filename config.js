@@ -34,6 +34,19 @@ const SEMINARIO_CONFIG = {
     soldOut: false,
   },
 
+  // Second hidden tier, unlocked the same way with its own code — for special
+  // guests who attend the seminar free of charge. specialPractice below is
+  // still charged separately even when this code is used. Its distinct `name`
+  // is what makes it show up as its own group in the "Precios cupo" summary.
+  guestCode: {
+    code: 'INVITADO01',
+    name: 'Invitado especial',
+    priceUsd: 0,
+    deadline: 'Solo con código de acceso',
+    slots: 10,
+    soldOut: false,
+  },
+
   // Optional add-on practice session, offered alongside every tier.
   // Same soldOut behavior as the tiers above — once its own slots fill up,
   // set soldOut: true to stop new selections regardless of which cupo is chosen.
@@ -71,6 +84,14 @@ SEMINARIO_CONFIG.loadLiveTierData = async function () {
         ac.priceUsd = live.priceUsd;
         ac.slots = live.slots;
         ac.soldOut = ac.soldOut || live.soldOut;
+        return;
+      }
+      // 'guest-code' corresponde al Invitado especial (guestCode), no a un tier público.
+      if (live.id === 'guest-code') {
+        const gc = SEMINARIO_CONFIG.guestCode;
+        gc.priceUsd = live.priceUsd;
+        gc.slots = live.slots;
+        gc.soldOut = gc.soldOut || live.soldOut;
         return;
       }
       const tier = SEMINARIO_CONFIG.tiers.find(function (t) { return t.id === live.id; });
